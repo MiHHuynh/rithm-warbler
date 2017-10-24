@@ -23,6 +23,10 @@ router.post('/:user_id/warbles', function(request, response, next) {
 })
 
 router.delete('/:user_id/warbles/:id', function(request, response, next) {
+  // find the warble by itself?
+  // call remove on the warble
+  // for the document instead of the model
+  // and then delete from the model
   db.Warble.findByIdAndRemove(request.params.id).then(function(warble){
     response.status(204).send('Deleted!');
   })

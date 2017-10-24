@@ -27,7 +27,7 @@ warbleSchema.pre('save', function(next) {
   }
 });
 
-warbleSchema.pre('remove', function(next) {
+warbleSchema.post('remove', function(next) {
   let warble = this;
   console.log("REMOVE HOOK THING")
   mongoose.model('User').findById(warble.user_id).then(function(user){
