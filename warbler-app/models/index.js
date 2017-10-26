@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
-mongoose.set('debug', true); // this will log the mongo queries to the terminal
-mongoose.connect('mongodb://localhost/WARBLER_DB'); // connect to the DB
+var mongoose = require("mongoose");
+mongoose.set("debug", true);
+mongoose.connect("mongodb://localhost/WARBLER_DB");
 
-mongoose.Promise = global.Promise // let's use ES2015 promises for mongoose! No callbacks necessary!
+mongoose.Promise = global.Promise;
 
-module.exports.User = require('./user')
-module.exports.Warble = require('./warble')
+module.exports.User = require("./user");
+module.exports.Warble = require("./warble");
