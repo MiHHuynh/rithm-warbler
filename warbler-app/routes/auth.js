@@ -8,17 +8,35 @@ var mongoose = require("mongoose");
 
 router.post("/signup", function(request, response) {
   db.User.create(request.body).then(function(user) {
-    response.status(201).send(user);
+    var token = jwt.sign(
+      {
+        username: user.username,
+        user_id: user.id
+      },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: 60 * 60 // expire in one hour
+      }
+    );
+    response.status(201).send({message: "Signed up and logged in", token: token});
   });
 });
 
 router.post("/login", function(req, res, next) {
-  db.User.findOne({ username: req.body.username }).then(
+
+  if (!req.body.username) {
+    return response.status(400).send({ message: "Please enter valid username." });
+  }
+  if (!req.body.password) {
+    return response.status(400).send({ message: "Please enter valid password." });
+  }
+
+  return db.User.findOne({ username: req.body.username }).then(
     function(user) {
       if (!user) {
-        res.status(400).send({ message: "Invalid Credentials" });
+        return res.status(400).send({ message: "Invalid Credentials; User does not exist" });
       }
-      user.comparePassword(req.body.password, function(err, isMatch) {
+      return user.comparePassword(req.body.password, function(err, isMatch) {
         if (isMatch) {
           var token = jwt.sign(
             {
@@ -30,19 +48,20 @@ router.post("/login", function(req, res, next) {
               expiresIn: 60 * 60 // expire in one hour
             }
           );
-          res.send({
+          return res.send({
             message: "Authenticated!",
             token: token
           });
         } else {
-          res.status(400).send({ message: "Invalid Credentials" });
+          return res.status(400).send({ message: "Invalid Credentials" });
         }
       });
     },
     function(err) {
       console.log("ERRORS!", err);
-    }
-  );
+    }).catch(function(error) {
+      console.log(error);
+    });
 });
 
 module.exports = router;

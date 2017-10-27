@@ -30,7 +30,7 @@ router.delete("/users/:user_id/warbles/:id", function(request, response, next) {
 });
 
 router.get("/warbles", function(request, response, next) {
-  db.Warble.find({}).then(function(warbles) {
+  db.Warble.find({}).sort('-createdAt').limit(100).then(function(warbles) {
     response.status(200).send(warbles);
   });
 });

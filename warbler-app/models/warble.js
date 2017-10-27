@@ -21,9 +21,6 @@ warbleSchema.pre("save", function(next) {
       .findById(warble.user_id)
       .then(function(user) {
         user.warbles.push(warble._id);
-        console.log("warble", warble);
-        console.log("warble.username", warble.username);
-        console.log("user.username", user.username);
         warble.username = user.username;
         return user.save();
       })
